@@ -5,8 +5,8 @@ class Solution {
         while( i <= j){
             int m = (i+j)/2;
             if(nums[m] == target){return m;}
-            if(nums[m] > target){ j = m-1;}
-            if(nums[m] < target){ i = m+1;}
+            if(nums[m] >= target){ j = m-1;}
+            if(nums[m] <= target){ i = m+1;}
         }
         return -1;
     }
@@ -24,10 +24,10 @@ class Solution {
         
         int m = (i+j)/2;
         if(nums[m] == target){return m;}
-        if(target < nums[m]){
+        if(target <= nums[m]){
             return bin(nums, target, i, m-1);
         }
-        if(target > nums[m]){
+        if(target >= nums[m]){
             return bin(nums, target, m+1, j);
         }
         return -1;
