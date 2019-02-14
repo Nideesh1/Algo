@@ -1,21 +1,14 @@
 class Solution {
-    public int mySqrt(int x) {
-        if(x == 0){return x;}
-        int i = 1; int j = x; int ans = 0;
-        while( i <= j){
-            int m = i + (j - i)/2;
-            if( m * m == x){return m;}
-            if( m  <= x/m){
-                 i = m + 1;
-                 ans = m;
-            } 
-            if (m >= x/m){
-                j = m - 1;
-            }
+public int removeElement(int[] nums, int val) {
+    int i = 0;
+    for (int j = 0; j < nums.length; j++) {
+        if (nums[j] != val) {
+            nums[i] = nums[j];
+            i++;
         }
-        return ans;
-            
     }
+    return i;
+}
 }
 
-//https://leetcode.com/problems/sqrtx/description/
+//https://leetcode.com/problems/remove-element/description/
