@@ -62,4 +62,4 @@ class Solution {
         
     }
 }
-//https://leetcode.com/problems/trim-a-binary-search-tree/submissions/
+//https://leetcode.com/problems/trim-a-binary-search-tree/
