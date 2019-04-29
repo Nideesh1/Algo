@@ -1,3 +1,30 @@
+//TreeMap
+class Solution {
+    public int[][] kClosest(int[][] points, int K) {
+        TreeMap<Double,List<int[]>> map = new TreeMap<>();
+        for(int[] point : points){
+            List<int[]> l = map.getOrDefault(dist(point), new ArrayList<>());
+            l.add(point);
+            map.put(dist(point), l);
+        }
+        int[][] res = new int[K][2];
+        List<int[]> hold = new ArrayList<>();
+        
+        for(double d : map.keySet()){
+            List<int[]> t = map.get(d);
+            hold.addAll(t);
+        }
+        for(int i = 0; i < res.length; i++){
+            res[i] = hold.get(i);
+        }
+        return res;
+    }
+    
+    public double dist(int[] p1){
+        return (p1[0])*(p1[0]) + (p1[1])*(p1[1]); 
+    }
+}
+
 class Solution {
     public int[][] kClosest(int[][] points, int K) {
         int l = 0; int r = points.length -1; int mid =0;
