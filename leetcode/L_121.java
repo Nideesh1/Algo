@@ -1,3 +1,17 @@
+//Even better
+class Solution {
+    public int maxProfit(int[] prices) {
+        int T_i10 = 0; 
+        int T_i11 = Integer.MIN_VALUE;
+        
+        for(int i : prices){
+            T_i10 = Math.max(T_i10, T_i11 + i);
+            T_i11 = Math.max(T_i11, 0 - i); // 0 is equal to T_i00
+        }
+        return T_i10;
+    }
+}
+
 class Solution {
     public int maxProfit(int[] prices) {
         int max = 0;
@@ -34,3 +48,4 @@ class Solution {
 }
 
 //https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+//https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/discuss/108870/Most-consistent-ways-of-dealing-with-the-series-of-stock-problems
