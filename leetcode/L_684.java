@@ -56,3 +56,4 @@ class Subset{
 }
 
 //https://leetcode.com/problems/redundant-connection/
+//https://leetcode.com/problems/redundant-connection/solution/
