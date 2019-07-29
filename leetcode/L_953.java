@@ -1,31 +1,26 @@
 class Solution {
     public boolean isAlienSorted(String[] words, String order) {
-        int[] index = new int[26];
-        for (int i = 0; i < order.length(); ++i)
-            index[order.charAt(i) - 'a'] = i;
-        
-        //System.out.println(Arrays.toString(index));
-        search :
-        for(int i = 0 ; i < words.length -1; i++){
-            String word1 = words[i];
-            String word2 = words[i+1];
+        int[] rank = new int[26];
+        for(int i = 0; i < rank.length; i++){
+            rank[order.charAt(i) - 'a'] = i;
+        }
+        outer:
+        for(int i = 0; i < words.length - 1; i++){
+            String s1 = words[i]; String s2 = words[i+1];
             
-            for(int k = 0; k < Math.min(word1.length(), word2.length()) ; k++){
-                if(word1.charAt(k) != word2.charAt(k)){
-                    if(index[word1.charAt(k) - 'a'] > index[word2.charAt(k) - 'a']){
-                        return false;
-                    } 
-                    continue search;
+            for(int j = 0; j < Math.min(s1.length(), s2.length()); j++){
+
+                if(rank[s1.charAt(j) - 'a'] < rank[s2.charAt(j) - 'a']) {
+                    continue outer;
+                }else{
+                    return false;
                 }
-                
-     
             }
-            
-            if(word1.length() > word2.length()){
+            if(s1.length() > s2.length()) {
+
                 return false;
             }
         }
-        
         return true;
     }
 }
