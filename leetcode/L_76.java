@@ -1,45 +1,37 @@
 class Solution {
     public String minWindow(String s, String t) {
-        if(s.length() < t.length()) return "";
-        //each ends of the window
-        int begin = 0; int end = 0; 
-        //head is to anchor the minimum length.
-        //we imagine length as MAX first
-        int head = 0; int length = Integer.MAX_VALUE;
-        Map<Character,Integer> map = new HashMap<>();
-        for(char c : t.toCharArray()){
-            map.put(c, map.getOrDefault(c, 0) +1);
-        }
-        int counter = map.size();
-        while( end < s.length()){
-            
-            char t1 = s.charAt(end);
-            if(map.containsKey(t1)){
-                map.put( t1, map.get(t1) - 1 );
-                if(map.get(t1) == 0){
-                    counter--;
-                }
-            }
-            end++;
-            
-            while(counter == 0){
-                char t2 = s.charAt(begin);
-                if(map.containsKey(t2)){
-                    map.put(t2 , map.get(t2) + 1);
-                    if(map.get(t2) > 0){
-                        counter++;
-                    }
-                }
-                if(end - begin < length){
-                    length = end - begin;
-                    head = begin;
-                }
-                begin++;
-            }
-            
-        }
-        return  length == Integer.MAX_VALUE? "" : s.substring(head, head + length);
+        int[] txt = new int[256];
+        int[] pat = new int[256];
         
+        for(int i = 0; i < t.length(); i++){
+            pat[t.charAt(i)]++;
+        }
+        
+        int start = 0; int st = -1; int size = Integer.MAX_VALUE; int count = 0;
+        for(int i = 0; i < s.length(); i++){
+            txt[s.charAt(i)]++;
+            
+            if(pat[s.charAt(i)] != 0 && txt[s.charAt(i)] <= pat[s.charAt(i)]){
+                count++;
+            }
+            
+            if(count == t.length()){
+                while(pat[s.charAt(start)] == 0 || txt[s.charAt(start)] > pat[s.charAt(start)]){
+                    if(txt[s.charAt(start)] > pat[s.charAt(start)]){
+                        txt[s.charAt(start)]--;
+                    }
+                    start++;
+                }
+                
+                if(i - start + 1 < size){
+                    size = i - start + 1;
+                    st = start;
+                }
+            }
+        }
+        
+        if(st == -1) return "";
+        return s.substring(st, st + size);
     }
 }
 
