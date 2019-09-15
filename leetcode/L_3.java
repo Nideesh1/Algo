@@ -1,27 +1,27 @@
 class Solution {
     public int lengthOfLongestSubstring(String s) {
-        //The map should only have one char to one instance.
-        //we go into the second while loop to bring the map
-        //back to this state
-        Map<Character,Integer> map = new HashMap<>();
-        int begin = 0; int end = 0; int counter = 0;
-        int d = 0;
-        while(end < s.length()){
-            char t1 = s.charAt(end);
-            map.put(t1, map.getOrDefault(t1, 0) +1);
-            if(map.get(t1) > 1) counter++;
-            end++;
-            if(counter > 0){
-                char t2 = s.charAt(begin);
-                if(map.get(t2) > 1) counter--;
-                map.put(t2, map.get(t2) - 1);
-                begin++;
+        if(s.length() == 0) return 0;
+        int[] ar = new int[256];
+        int size = Integer.MIN_VALUE;
+        int start = 0;
+        for(int j = 0; j < s.length(); j++){
+            ar[s.charAt(j)]++;
+            while(!valid(ar) && start < j){
+                ar[s.charAt(start)]--;
+                start++;
             }
-            
-            d = Math.max(d, end - begin);
+            if(j - start + 1 > size){
+                size = j - start + 1;
+            }
         }
-        return d;
-        
+        return size;
+    }
+    
+    public boolean valid(int[] ar){
+        for(int i : ar){
+            if (i > 1) return false;
+        }
+        return true;
     }
 }
 
