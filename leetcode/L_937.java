@@ -1,28 +1,35 @@
 class Solution {
     public String[] reorderLogFiles(String[] logs) {
-        Comparator<String> comp = new Comparator<String>(){
-            
-            public int compare(String log1, String log2){
-                String[] ar1 = log1.split(" ", 2);
-                String[] ar2 = log2.split(" ", 2);
-                boolean isDigit1 = Character.isDigit(ar1[1].charAt(0));
-                boolean isDigit2 = Character.isDigit(ar2[1].charAt(0));
+        Comparator co = new Comparator<String>(){
+            public int compare(String a, String b){
+                String[] ar = a.split(" ",2);
+                String[] br = b.split(" ",2);
                 
-                //if neither is digit. they are both letter
-                if (!isDigit1 && !isDigit2){
-                    int c = ar1[1].compareTo(ar2[1]);
-                    if( c != 0 ){
-                        return c;
-                    }
-                    return ar1[0].compareTo(ar2[0]);
+                boolean alet = false;
+                boolean blet = false;                
+                for(char c : ar[1].toCharArray()){
+                    if(Character.isLetter(c))
+                    {alet = true; break;}
                 }
-                
-                return isDigit1 ? ( isDigit2 ? 0 : 1 ) : -1;
+                for(char c : br[1].toCharArray()){
+                    if(Character.isLetter(c))
+                    {blet = true; break;}
+                }
+                if(alet && blet){
+                    if(ar[1].equals(br[1])){
+                        return ar[0].compareTo(br[0]);
+                    }else{
+                        return ar[1].compareTo(br[1]);
+                    }
+                }else{
+                    if(alet && !blet) return -1;
+                    if(!alet && blet) return 1;
+                }
+    
+                return 0;
             }
-            
         };
-        
-        Arrays.sort(logs, comp);
+        Arrays.sort(logs, co);
         return logs;
     }
 }
