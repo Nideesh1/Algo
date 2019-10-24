@@ -9,20 +9,23 @@ public class Solution extends Reader4 {
      * @return    The number of actual characters read
      */
     public int read(char[] buf, int n) {
-        char[] temp = new char[4];
+        int read = 0;
         int total = 0;
-        int pos = 0;
-        while(total <= n){
-            int leftToN = n - total;
-            int read = read4(temp);
-            if(read == 0) break;
-            total += read;
-            for(int i = 0; i < read && leftToN > 0; i++ ,leftToN--){
-                buf[pos++] = temp[i];
+        char[] temp;
+        int i = 0;
+        while(total*4 < n){
+            temp = new char[4];
+            read4(temp);
+            total++;
+            for(char c : temp){
+                if((Character.isLetter(c) || Character.isDigit(c)) && read < n){
+                    //System.out.print(c + " ");
+                    read++;
+                    buf[i++] = c;
+                }
             }
-
         }
-        return pos;
+        return read;
     }
 }
 
