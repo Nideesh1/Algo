@@ -33,3 +33,25 @@ class Solution {
 
 //https://leetcode.com/problems/clone-graph/discuss/413958/Java-BFS-and-Hashmap
 
+class Solution {
+    public Node cloneGraph(Node node) {
+        if(node == null) return null;
+        Map<Integer,Node> map = new HashMap<>();
+        return dfs(map, node);
+    }
+    public Node dfs(Map<Integer,Node> map, Node node){
+        if(node == null) return null;
+        if(map.containsKey(node.val)){
+            return map.get(node.val);
+        }
+        
+        List<Node> l = new ArrayList<>();
+        map.put(node.val, new Node(node.val, l));
+        for(Node nei : node.neighbors){
+            l.add(dfs(map, nei));
+        }
+        return map.get(node.val);
+    }
+}
+
+//https://leetcode.com/problems/clone-graph/discuss/415034/Java%3A-DFS-100-faster-and-97.65-less-memory-dfs
