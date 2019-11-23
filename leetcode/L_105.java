@@ -6,41 +6,46 @@
  *     TreeNode right;
  *     TreeNode(int x) { val = x; }
  * }
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
  */
 class Solution {
-    int pointer = 0;
+    int pre_idx = 0;
     int[] pre;
-    int[] in; 
+    int[] in;
+    
     Map<Integer,Integer> map = new HashMap<>();
-    //k,v -> key is value of node, value is position(index) of that value in inorder array
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        
+        int idx = 0;
         this.pre = preorder;
-        //this.in = inorder;
-        
-        int i = 0;
-        for(int k : inorder){
-            map.put(k, i++);
+        this.in = inorder;
+        for(Integer i : in){
+            map.put(i, idx++);
         }
-        return dfs(0, inorder.length);
+        return dfs(0, pre.length - 1);
     }
     
-    public TreeNode dfs(int left, int right){
-        if(left == right){
+    public TreeNode dfs(int l, int r){
+        if(l > r){
             return null;
         }
-        int root_val = pre[pointer];
-        pointer++;
-        int root_pos = map.get(root_val);
         
-        TreeNode node = new TreeNode(root_val);
+        int rval = pre[pre_idx];
+        int index = map.get(rval);
         
-        node.left = dfs(left, root_pos);
-        node.right = dfs(root_pos + 1, right);
+        TreeNode root = new TreeNode(rval);
         
-        return node;
+        pre_idx++;
+        root.left = dfs(l, index - 1);
+        root.right = dfs(index+1, r);
         
+        return root;
     }
 }
-
 //https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/solution/
