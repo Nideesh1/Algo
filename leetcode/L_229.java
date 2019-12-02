@@ -25,12 +25,8 @@ class Solution {
                 count[1]--;
             }
 
-        System.out.println("elem " + Arrays.toString(elem));
-        System.out.println("count " + Arrays.toString(count));
         
         }
-        System.out.println("elem " + Arrays.toString(elem));
-        System.out.println("count " + Arrays.toString(count));
 
         Arrays.fill(count,0);
         
