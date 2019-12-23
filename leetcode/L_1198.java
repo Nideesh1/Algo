@@ -4,22 +4,15 @@ public int smallestCommonElement(int[][] mat) {
         int N = mat[0].length;
         HashMap<Integer, Integer> map = new HashMap<>();
         for (int[] ints : mat) {
-            if (map.containsKey(ints[0])) {
-                map.put(ints[0], map.get(ints[0]) + 1);
-            } else {
-                map.put(ints[0], 1);
-            }
+            map.put(ints[0], map.getOrDefault(ints[0], 0) + 1);
+
             for (int j = 1; j < N; j++) {
                 if (ints[j] != ints[j - 1])
-                    if (map.containsKey(ints[j])) {
-                        map.put(ints[j], map.get(ints[j]) + 1);
-                    } else {
-                        map.put(ints[j], 1);
-                    }
+            map.put(ints[j], map.getOrDefault(ints[j], 0) + 1);
+
             }
         }
     
-        System.out.println(map);
     
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             if (entry.getValue() == M) {
