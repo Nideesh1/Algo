@@ -1,60 +1,70 @@
 class Solution {
     Map<Integer,List<Integer>> adj = new HashMap<>();
+    int[] ind;
+    int n;
     public int minimumSemesters(int N, int[][] relations) {
-        Map<Integer,Integer> color = new HashMap<>();
+        ind = new int[N+1];
+        n = N;
         for(int[] rel : relations){
-            List<Integer> l = adj.getOrDefault(rel[0], new ArrayList<>());
+            List<Integer> l  = adj.getOrDefault(rel[0], new ArrayList<>());
+            
             l.add(rel[1]);
             adj.put(rel[0], l);
-            color.put(rel[0], 0);
+            ind[rel[1]]++;
         }
+        if(cyc()){
 
-        for(int i = 1; i <= N; i++){
-            if(color.getOrDefault(i, 4) == 0){
-                if(cyc(i, color)) return -1;
-            }
+            
+            return -1;
         }
-        System.out.println("hi");
+        boolean[] vis = new boolean[n+1];
+        int[] dp = new int[n+1];
+        Arrays.fill(dp, 1);
         
-        int[] dp = new int[N+1];Arrays.fill(dp, 1);
-        boolean[] vis = new boolean[N+1];
-        
-        for(int i = 1; i <= N; i++){
+        for(int i = 1; i <= n; i++){
             if(!vis[i]){
-                dp(i, dp, vis);
+                dp(dp, vis, i);
             }
         }
         int res = -1;
         for(int d : dp) res = Math.max(res, d);
         return res;
     }
-    public void dp(int u, int[] dp, boolean[] vis){
+    
+    public void dp(int[] dp, boolean[] vis, int u){
         if(vis[u]) return;
         vis[u] = true;
-        if(!adj.containsKey(u) ||  adj.get(u).size() == 0) return;
+        if(!adj.containsKey(u) || adj.get(u).size() == 0)return;
         for(int nei : adj.get(u)){
             if(!vis[nei]){
-                dp(nei, dp, vis);
+                dp(dp, vis, nei);
             }
             dp[u] = Math.max(dp[u], dp[nei] + 1);
         }
     }
+
     
-    public boolean cyc(int i, Map<Integer,Integer> color){
-        if(color.get(i) == 2 || !color.containsKey(i)) return false;
-        if(color.get(i) == 1) return true;
-        
-        color.put(i, 1);
-        for(int nei : adj.get(i)){
-            if(!color.containsKey(nei)) continue;
-            if(color.getOrDefault(nei, 4) == 1) return true;
+    public boolean cyc(){
+        Queue<Integer> q = new LinkedList<>();
+        int size = 0;
+        for(int i = 1; i < ind.length; i++){
+            if(ind[i] == 0) {q.add(i);}
             
-            if(color.get(nei) == 0){
-                 if(cyc(nei, color)) return true;
+        }
+
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            //System.out.println(cur);
+            if(ind[cur] == 0){size++;}
+            if(!adj.containsKey(cur))continue;
+            for(int nei : adj.get(cur)){
+                ind[nei]--;
+                if(ind[nei] == 0){
+                    q.add(nei);
+                }
             }
         }
-        color.put(i, 2);
-        return false;
+        return size != n;
     }
 }
 
