@@ -8,25 +8,26 @@
  */
 class Solution {
     public ListNode insertionSortList(ListNode head) {
-        
         if(head == null) return null;
         
         ListNode dum = new ListNode(0);
+        ListNode prev = dum;
         ListNode cur = head;
-        ListNode pre = dum;
         ListNode next = null;
         
         while(cur != null){
             
             next = cur.next;
-            while(pre.next != null && pre.next.val < cur.val){
-                pre = pre.next;
+            while(prev.next != null && prev.next.val < cur.val){
+                prev = prev.next;
             }
             
             
-            cur.next = pre.next;
-            pre.next = cur;
-            pre = dum;
+            cur.next = prev.next;
+            prev.next = cur;
+            
+            //reset and move forward
+            prev = dum;
             cur = next;
             
         }
