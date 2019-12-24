@@ -1,6 +1,6 @@
-class Node{
-    int key; int val; Node left; Node right;
-    Node(int key, int val){
+class Node<K,V>{
+    K key; V val; Node left; Node right;
+    Node(K key, V val){
         this.key = key; this.val = val;
     }
 }
@@ -16,7 +16,7 @@ class LRUCache {
         if(map.containsKey(key)){
             Node n = map.get(key);
             removeNode(n); addToTop(n);
-            return n.val;
+            return (Integer) n.val;
         }
         return -1;
     }
