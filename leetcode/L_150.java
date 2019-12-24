@@ -1,21 +1,24 @@
 class Solution {
-    public List<List<Integer>> threeSum(int[] nums) {
-        Set<List<Integer>> res = new HashSet<>();
-        Arrays.sort(nums);
-        for(int i = 0; i < nums.length - 2; i++){
-            int j = i + 1; int k = nums.length - 1;
-            while(j < k){
-                int sum = nums[i] + nums[j] + nums[k];
-                if(sum == 0){
-                    res.add(Arrays.asList(nums[i], nums[j], nums[k])); j++; k--;
-                } else if (sum > 0){
-                    k--;
-                } else{
-                    j++;
-                }
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stk = new Stack<>();
+        for(String s : tokens){
+            if(s.equals("+")){
+                stk.push(stk.pop() + stk.pop());
+            } else if(s.equals("*")){
+                stk.push(stk.pop() * stk.pop());
+            } else if(s.equals("/")){
+                int b = stk.pop();
+                int a = stk.pop();
+                stk.push(a/b);
+            } else if(s.equals("-")){
+                int b = stk.pop();
+                int a = stk.pop();
+                stk.push(a-b);
+            } else{
+                stk.push(Integer.valueOf(s));
             }
         }
-        return new ArrayList<>(res);
+        return stk.pop();
     }
 }
 
