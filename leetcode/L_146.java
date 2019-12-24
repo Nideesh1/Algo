@@ -43,6 +43,7 @@ class LRUCache {
     }
     
     //helper1
+    //make the new node the start
     public void addToTop(Node node){
         node.right = start;
         node.left = null;
