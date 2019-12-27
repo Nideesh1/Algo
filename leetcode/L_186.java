@@ -1,23 +1,29 @@
 class Solution {
-    public void reverseWords(char[] s) {
-        rev(s, 0, s.length - 1);
-        for(int j = 0, i = 0; j <= s.length; j++){
-            if(j == s.length || s[j] == ' '){
-                rev(s, i, j - 1);
+    public void reverseWords(char[] a) {
+        
+        rev(a, 0, a.length - 1);
+        
+        int i = 0; int j = 0;
+        while(j <= a.length){
+            if(j == a.length || a[j] == ' '){
+                rev(a, i, j- 1);
                 i = j + 1;
             }
+            j++;
         }
+        
     }
     
-    public void rev(char[] s, int l, int r){
-        while(l < r){
-            char c = s[l];
-            s[l] = s[r];
-            s[r] = c;
-            l++;
-            r--;
+    public void rev(char[] a, int s, int e){
+        while(s<= e){
+            char t= a[s];
+            a[s] = a[e];
+            a[e] = t;
+            s++;
+            e--;
         }
     }
 }
+
 
 //https://leetcode.com/problems/reverse-words-in-a-string-ii/discuss/53775/My-Java-solution-with-explanation
