@@ -14,7 +14,26 @@ class Solution {
             
             i += 2;
         }
-        BC co = new BC();
+        
+        Comparator<Building> co = new Comparator<Building>(){
+            
+    public int compare(Building b1, Building b2){
+
+        if(b1.x == b2.x){
+            if(b1.start && b2.start && (b1.start == b2.start)){
+                return b2.y - b1.y;
+            }else if (!b1.start && !b2.start && (b1.start == b2.start)){
+                return b1.y - b2.y;
+            } else if (b1.start != b2.start){
+                return b1.start ? -1 : 1;
+            }
+        }
+            
+        return b1.x - b2.x; 
+    }
+            
+        };
+        
         Arrays.sort(ar, co);
         
         //key is height, value is freq of hiehgt
@@ -63,22 +82,7 @@ class Building {
     }
 }
 
-class BC implements Comparator<Building> {
-    public int compare(Building b1, Building b2){
 
-        if(b1.x == b2.x){
-            if(b1.start && b2.start && (b1.start == b2.start)){
-                return b2.y - b1.y;
-            }else if (!b1.start && !b2.start && (b1.start == b2.start)){
-                return b1.y - b2.y;
-            } else if (b1.start != b2.start){
-                return b1.start ? -1 : 1;
-            }
-        }
-            
-        return b1.x - b2.x; 
-    }
-}
 
 //https://leetcode.com/problems/the-skyline-problem/
 //https://github.com/mission-peace/interview/blob/master/src/com/interview/geometry/SkylineDrawing.java
