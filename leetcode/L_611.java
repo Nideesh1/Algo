@@ -1,27 +1,27 @@
 class Solution {
     public int triangleNumber(int[] nums) {
-        int count = 0;
         Arrays.sort(nums);
-        for(int i = 0; i < nums.length; i++){
-            int k = i + 2;
-            for(int j = i + 1; j < nums.length - 1 && nums[i] != 0 ; j++){
-                k = binarySearch(nums, k, nums.length - 1, nums[i] + nums[j]);
-                count += k - j - 1;
+        int n = nums.length;
+        int res = 0;
+        for(int i = n - 1; i >= 2; i--){
+            
+            int lo = 0;
+            int hi = i - 1;
+            
+            while(lo < hi){
+                
+                int sum = nums[lo] + nums[hi];
+                if(sum > nums[i]){
+                    res += hi - lo;
+                    hi--;
+                }else{
+                    lo++;
+                }
+                
             }
+            
         }
-        return count;
-    }
-    
-    public int binarySearch(int[] nums, int l, int r, int x){
-        while(l <= r && r < nums.length){
-            int m = (l+r) / 2;
-            if(x <= nums[m]){
-                r = m - 1;
-            }else{
-                l = m + 1;
-            }
-        }
-        return l;
+        return res;
     }
 }
-//https://leetcode.com/problems/valid-triangle-number/solution/
+//https://leetcode.com/problems/valid-triangle-number/discuss/104174/Java-O(n2)-Time-O(1)-Space
