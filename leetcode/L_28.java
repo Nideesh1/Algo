@@ -55,4 +55,54 @@ class Solution {
     }
 }
 
+
+//Rabin Karp
+class Solution {
+    
+    
+        int R = 256;
+        int Q = 997;
+    
+    public int strStr(String haystack, String needle) {
+        int m = needle.length(); 
+        int n = haystack.length();
+        
+        if ( needle.length() > haystack.length() ) { return -1; }
+        if ( needle.length() == 0 ) { return 0; }
+        
+        long nhash = hash(needle, m);
+        long hhash = hash(haystack, m);
+        
+        if(nhash == hhash) return 0;
+        //System.out.println(nhash);
+        //System.out.println(hhash);
+        int RM = 1;
+        for(int i = 1; i <= m - 1; i++){
+            RM = ((RM * R)) % Q;
+        }
+        
+        for(int i = m ; i < n; i++){
+            hhash = (hhash + Q - RM*haystack.charAt(i - m) % Q) % Q;
+            hhash = (hhash*R + haystack.charAt(i)) % Q;
+            
+            if(hhash == nhash && haystack.substring(i - m +1 ,  i + 1).equals(needle)) {
+                //System.out.println(haystack.substring(i - m +1 ,  i + 1));
+                return i - m + 1;
+            }
+            // if ( hhash == nhash && haystack.substring(i - m -1, i +1).equals(needle) ) {
+            //     return i - m + 1;
+            // }
+        }
+        
+        return -1;
+    }
+    
+    public long hash(String str, int m){
+        long hash = 0;
+        for(int i = 0; i < m; i++){
+            hash = (hash * R + str.charAt(i)) % Q;
+        }
+        return hash;
+    }
+}
 //https://leetcode.com/problems/implement-strstr/
