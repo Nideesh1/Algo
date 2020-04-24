@@ -37,9 +37,9 @@ class Solution {
             }
         }
    
-        if(dist.size() != N) return -1;
+        
 
-        return res;
+        return dist.size() == N ? res : -1;
     }
 }
 
