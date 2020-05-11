@@ -1,36 +1,22 @@
 class Solution {
-    
-    class Pair{
-        int a; int b; Pair(int a, int b){
-            this.a = a; this.b = b;
-        }
-    }
-    
     public int findPairs(int[] nums, int k) {
-        Map<Integer, Pair> map = new HashMap<>();
-
-        
-        for(int i = 0; i < nums.length; i++){
-            for(int j = 0; j < nums.length;j++){
-                if(i == j){continue;}
-                if(Math.abs(nums[i] - nums[j]) == k){
-                    
-                    Pair p = nums[i] < nums[j] ? new Pair(nums[i], nums[j]) : new Pair(nums[j], nums[i]);
-                    if(nums[i] < nums[j]){
-                        map.put(nums[i]*10 + nums[j], p);
-                    }else{
-                       map.put(nums[j]*10 + nums[i], p); 
-                    }
-                       
-                    
-                }
+        if(k < 0) return 0;
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i : nums){
+            map.put(i, map.getOrDefault(i, 0) + 1);
+        }
+        int count = 0;
+        for(int m : map.keySet()){
+            if(k == 0){
+                if(map.get(m) >= 2) count++;
+            }
+            else
+            {if(map.containsKey(m + k))
+                count++;
             }
         }
-        
-
-
-        return map.size();
+        return count;
     }
 }
 
-//https://leetcode.com/problems/k-diff-pairs-in-an-array/description/
+//https://leetcode.com/problems/k-diff-pairs-in-an-array/discuss/100098/Java-O(n)-solution-one-Hashmap-easy-to-understand
