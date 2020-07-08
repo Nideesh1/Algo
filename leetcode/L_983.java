@@ -1,26 +1,36 @@
 class Solution {
+    int[] costs;
+    int[] memo;
+    Set<Integer> dayset;
+
     public int mincostTickets(int[] days, int[] costs) {
-        int n = days[days.length-1];
-        //the dag is dp[i] = min{ dp[i-1] + cost[0], dp[i-7] + cost[1], dp[i-30] + cost[2] }        
-        int[] dp = new int[n+1];
-        boolean[] travelDay = new boolean[n+1];
-        
-        for(int i = 0; i < days.length; i++){
-            int day = days[i];
-            travelDay[day] = true;
+        this.costs = costs;
+        memo = new int[days[days.length -1]];
+        dayset = new HashSet<>();
+        for (int d: days) dayset.add(d);
+
+        return dp(days[days.length - 1]);
+    }
+
+    public int dp(int i) {
+        if (i <= 0)
+            return 0;
+        if (memo[i-1] != 0)
+            return memo[i-1];
+
+        int ans;
+        if (dayset.contains(i)) {
+            int one = dp(i-1) + costs[0];
+            int two = dp(i-7) + costs[1];
+            int thr = dp(i-30) + costs[2];
+            ans = Math.min(one, Math.min(two, thr));
+        } else {
+            ans = dp(i-1);
         }
-        
-        for(int i = 1; i < dp.length; i++){
-            if(travelDay[i] == false) {dp[i] = dp[i-1]; continue;}      
-            int one = dp[i-1] + costs[0];
-            int sev = dp[Math.max(0, i-7)] + costs[1];
-            int thir = dp[Math.max(0, i-30)] + costs[2];
-            
-            dp[i] = Math.min(one, Math.min(sev, thir));
-        }
-        return dp[n];
+
+        memo[i-1] = ans;
+        return ans;
     }
 }
 
-//https://leetcode.com/problems/minimum-cost-for-tickets/
-//Solution from https://leetcode.com/problems/minimum-cost-for-tickets/discuss/227130/Java-DP-Solution-with-detailed-comment-and-explanation
+//https://leetcode.com/problems/minimum-cost-for-tickets/solution/
