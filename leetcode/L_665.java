@@ -1,27 +1,18 @@
 class Solution {
-    public boolean checkPossibility(int[] nums) {
-        //Modification can mean anything. Since the condition is <= we are going to cleverly
-        //set nums[i]s equal to each other
+    public boolean checkPossibility(int[] arr) {
         int count = 0;
-        for(int i = 1; i < nums.length && count <= 1; i++){
-            
-            if(nums[i-1] > nums[i]){
-                
-                count++;
-                if( (i - 2 < 0) || nums[i-2] <= nums[i] )
-                {
-                    nums[i-1] = nums[i];
+        for(int i = 1; i < arr.length; i++){
+            if(arr[i] < arr[i-1]){
+                if(i == 1 || arr[i-2] <= arr[i]){
+                    arr[i-1] = arr[i];count++;
                 }else{
-                    nums[i] = nums[i-1];
+                    arr[i] = arr[i-1];count++;
                 }
-                
             }
-            
         }
-        
         return count <= 1;
-        
     }
 }
 
-//https://leetcode.com/problems/non-decreasing-array/description/
+
+//Credit to https://leetcode.com/problems/non-decreasing-array/discuss/106826/JavaC%2B%2B-Simple-greedy-like-solution-with-explanation
