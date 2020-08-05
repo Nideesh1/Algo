@@ -2,7 +2,6 @@ class Solution {
     public boolean buddyStrings(String A, String B) {
         if(A.length() != B.length()) return false;
         Map<Character,Integer> mapA = new HashMap<>();
-        Map<Character,Integer> mapB = new HashMap<>();
         List<Integer> pos = new ArrayList<>();
         for(int i = 0; i < A.length(); i++){
             char a = A.charAt(i);
@@ -10,8 +9,7 @@ class Solution {
             
             if(a != b) pos.add(i);
             
-            mapA.put(a, mapA.getOrDefault(a, 0) + 1);
-            mapB.put(b, mapB.getOrDefault(b, 0) + 1);            
+            mapA.put(a, mapA.getOrDefault(a, 0) + 1);           
         }
         if(A.equals(B)){
             for(Character c : mapA.keySet()) {if(mapA.get(c) > 1) return true;}
