@@ -1,27 +1,48 @@
 class Solution {
     public int maxSubArray(int[] nums) {
-        return dfs(nums, 0, nums.length - 1);
+        return recur(nums, 0, nums.length - 1);
     }
     
-    public int dfs(int[] nums, int i, int j){
+    public int recur(int[] nums, int i , int j){
         if(i == j) return nums[i];
         int m = (i+j)/2;
-        int lef = dfs(nums, i, m);
-        int rig = dfs(nums, m+1, j);
-        int mid = mid(nums, i, m, j);
-        return Math.max(mid, Math.max(lef,rig));
+        int l = recur(nums, i, m);
+        int r = recur(nums, m+1,j);
+        
+        int mer = mer(nums, m);
+        return Math.max(l, Math.max(r, mer));
     }
-    public int mid(int[] nums, int i, int m, int j){
-        int lef = Integer.MIN_VALUE; int rig = Integer.MIN_VALUE;
-        int temp = 0;
-        for(int k = m; k >= i; k--){
-            temp += nums[k]; lef = Math.max(lef, temp);
+    
+    public int mer(int[] nums,int m){
+        int lmax = Integer.MIN_VALUE;
+        int l = 0;
+        for(int i = m; i >= 0; i--){
+            l += nums[i];
+            lmax = Math.max(lmax, l);
         }
-        temp = 0;
-        for(int k = m + 1; k <= j; k++){
-            temp += nums[k]; rig = Math.max(rig, temp);
+        int rmax = Integer.MIN_VALUE;
+        int r = 0;
+        for(int i = m + 1; i < nums.length ; i++){
+            r += nums[i];
+            rmax = Math.max(rmax, r);
         }
-        return lef + rig;
+        return Math.max(lmax + rmax,Math.max(lmax, rmax));
+    }
+    
+}
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int cumSum = 0;
+        int maxCum = Integer.MIN_VALUE;
+        
+        for(int i = 0; i < nums.length; i++){
+            cumSum += nums[i];
+            
+            maxCum = Math.max(maxCum, cumSum);
+            cumSum = cumSum < 0 ? 0 : cumSum;
+        }
+        return maxCum;
     }
 }
 
