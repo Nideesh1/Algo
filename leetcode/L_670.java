@@ -1,29 +1,22 @@
 class Solution {
     public int maximumSwap(int num) {
-        char[] ar = Integer.toString(num).toCharArray();
-        
-        //last index of each number in the num
-        int[] last = new int[10];
-        
-        for(int i = 0; i < ar.length; i++){
-            last[ar[i] - '0'] = i;
+        char[] arr = Integer.toString(num).toCharArray();
+        Map<Character,Integer> map = new HashMap<>();
+        for(int i = 0; i < arr.length; i++){
+            map.put(arr[i], i);
         }
-        
-        for(int i = 0; i < ar.length; i++){
-            for(int d = 9; d > ar[i] - '0'; d--){
-                
-                if(last[d] > i){
-                    char t = ar[i];
-                    ar[i] = ar[last[d]];
-                    ar[last[d]] = t;
-                    return Integer.valueOf(new String(ar));
+        for(int i = 0; i < arr.length; i++){
+            for(char c = '9'; c >= '0'; c--){
+                int ind = map.getOrDefault(c, -1);
+                if(c > arr[i] && ind > i){
+                    char t = arr[i];
+                    arr[i] = arr[ind];
+                    arr[ind] = t;
+                    return Integer.valueOf(new String(arr));
                 }
-                
             }
         }
-        
         return num;
     }
 }
 
-//https://leetcode.com/problems/maximum-swap/solution/
