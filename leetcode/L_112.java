@@ -65,3 +65,20 @@ class Solution {
         return hasPathSum(root.left, sum) || hasPathSum(root.right, sum);
     }
 }
+
+
+class Solution {
+    boolean res = false;
+    public boolean hasPathSum(TreeNode root, int sum) {
+        dfs(root, sum);
+        return res;
+    }
+    public void dfs(TreeNode root, int sum){
+        if(root == null) return;
+        
+        if(root.left == null && root.right == null && sum - root.val == 0) res = true;
+        
+        dfs(root.left, sum - root.val);
+        dfs(root.right, sum - root.val);
+    }
+}
