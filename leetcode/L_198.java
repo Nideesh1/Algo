@@ -1,4 +1,25 @@
 class Solution {
+    Map<Integer,Integer> map;
+    int[] nums;
+    public int rob(int[] nums) {
+        this.nums = nums;
+        int n = nums.length;
+        map = new HashMap<>();
+        return dfs(n-1);
+    }
+    public int dfs(int n){
+        if(n < 0) return 0;
+        if(map.containsKey(n)) return map.get(n);
+        
+        int back = dfs(n-1);
+        int back2 = dfs(n-2) + nums[n];
+        
+        map.put(n, Math.max(back,back2));
+        return map.get(n);
+    }
+}
+
+class Solution {
     public int rob(int[] nums) { int n = nums.length;
         if( n == 0 ) return 0;
                                 
