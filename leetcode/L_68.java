@@ -35,3 +35,4 @@ class Solution {
 }
 
 //https://leetcode.com/problems/text-justification/discuss/24891/Concise-python-solution-10-lines./303690
+//https://medium.com/better-programming/formatting-strings-with-java-2281d40accce
