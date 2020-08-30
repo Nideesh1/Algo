@@ -23,36 +23,33 @@ class Solution {
 }
 
 class Solution {
+    Map<String,Integer> map = new HashMap<>();
     public int superEggDrop(int K, int N) {
-        int[][] memo = new int[K + 1][N + 1];
-        return helper(K, N, memo);
+
+        int eggs = K; int floors = N;
+        return dfs(eggs, N);
     }
-    private int helper(int K, int N, int[][] memo) {
-        if (N <= 1) {
-            return N;
-        }
-        if (K == 1) {
-            return N;
-        }
-        if (memo[K][N] > 0) {
-            return memo[K][N];
-        }
+    public int dfs(int eggs, int floors){
+        if(floors <= 1) return floors;
+        if(eggs == 1) return floors;
+        String key = eggs + "," + floors;
+        if(map.containsKey(key)) return map.get(key);
         
-        int low = 1, high = N, result = N;
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            int left = helper(K - 1, mid - 1, memo);
-            int right = helper(K, N - mid, memo);
-            result = Math.min(result, Math.max(left, right) + 1);
-            if (left == right) {
+        int l = 1; int r = floors; int res = Integer.MAX_VALUE;
+        while(l <= r){
+            int mid = l + (r - l)/2;
+            int one = dfs(eggs - 1, mid-1);
+            int two = dfs(eggs, floors - mid);
+            res = Math.min(res, Math.max(one, two) + 1);
+            if(one == two){
                 break;
-            } else if (left < right) {
-                low = mid + 1;
-            } else {
-                high = mid - 1;
+            }else if (one < two){
+                l = mid + 1;
+            }else{
+                r = mid - 1;
             }
         }
-        memo[K][N] = result;
-        return result;
+        map.put(key, res);
+        return res;
     }
 }
