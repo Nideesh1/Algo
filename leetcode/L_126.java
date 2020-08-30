@@ -1,70 +1,64 @@
 class Solution {
-    Set<String> wordSet;
+    String beginWord; String endWord; Set<String> words;
     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
         List<List<String>> res = new ArrayList<>();
-        if(!wordList.contains(endWord)) return res;
-        wordSet = new HashSet<>(wordList);
-        Map<String,List<String>> parentMap = new HashMap<>();
-        
-        for(String str : wordSet){
-            parentMap.put(str, new ArrayList<>());
+        this.beginWord = beginWord; this.endWord = endWord; words = new HashSet<>(wordList);
+        //System.out.println(nei("hot"));
+        Map<String,List<String>> map = new HashMap<>();
+        if(!bfs(map)) return res;
+        System.out.println(map);
+        List<List<String>> ans = new ArrayList<>();
+        dfs(map, endWord, new ArrayList<>(), ans);
+        //System.out.println(ans);
+        return ans;
+    }
+    
+    public void dfs(Map<String,List<String>> map, String cur, List<String> temp,
+                   List<List<String>> ans){
+        if(cur.equals(beginWord)){
+            List<String> path = new ArrayList<>(temp);
+            path.add(beginWord);
+            Collections.reverse(path);
+            ans.add(path);
+        }else{
+            temp.add(cur);
+            for(String s : map.get(cur)){
+                dfs(map, s, temp, ans);
+            }
+            temp.remove(temp.size() - 1);
         }
-        
-        Map<String,Integer> distance = new HashMap<>();
-        
-        if(!bfs(beginWord, endWord, parentMap, distance)){
-            return res;
+    }
+    
+    public boolean bfs(Map<String,List<String>> map){
+        boolean res = false;
+        Queue<String> q = new LinkedList<>();
+        q.add(beginWord);
+        Map<String,Integer> dist = new HashMap<>();
+        dist.put(beginWord, 0);
+        while(!q.isEmpty()){
+            int size = q.size();
+            
+            for(int s = 0; s < size; s++){
+                String cur = q.poll();
+                if(cur.equals(endWord)) res = true;
+                int level = dist.get(cur);
+                List<String> nei = nei(cur);
+                for(String n : nei){
+                    if(!dist.containsKey(n)){
+                        q.add(n);
+                        List<String> l = new ArrayList<>(); l.add(cur);
+                        map.put(n, l);
+                        dist.put(n, level + 1);
+                    }else if(level + 1 == dist.get(n)){
+                        map.get(n).add(cur);
+                    }
+                }
+            }
         }
-        //backtrack
-        dfs(endWord, beginWord, parentMap, res, new ArrayList<>());
         return res;
     }
     
-    public void dfs(String cur, String beginWord, Map<String, List<String>> parentMap, List<List<String>> res, List<String> path){
-        if(cur.equals(beginWord)){
-            List<String> temp = new ArrayList<>(path);
-            temp.add(beginWord);
-            Collections.reverse(temp);
-            res.add(temp);
-        }else{
-            path.add(cur);
-            for(String par : parentMap.get(cur)){
-                dfs(par, beginWord, parentMap, res, path);
-            }
-            path.remove(path.size() - 1);
-        }
-    }
-    
-    
-    public boolean bfs (String beginWord, String endWord, Map<String, List<String>> parentMap, Map<String, Integer> distance){
-        Queue<String> q = new LinkedList<>();
-        q.add(beginWord);
-        distance.put(beginWord, 0);
-        boolean found = false;
-        while(!q.isEmpty()){
-            int size = q.size();
-            while(size > 0){
-                String parent = q.poll();
-                int level = distance.get(parent);
-                List<String> nei = neigh(parent);
-                for(String n : nei){
-                    if(n.equals(endWord)) found = true;
-                    if(!distance.containsKey(n)){
-                        distance.put(n, level + 1);
-                        parentMap.get(n).add(parent);
-                        q.add(n);
-
-                    }else if(distance.get(n) == level + 1){
-                        parentMap.get(n).add(parent);                        
-                    }
-                }
-                size--;
-            }
-        }
-        return found;
-    }
-    
-    public List<String> neigh(String word){
+    public List<String> nei(String word){
         List<String> res = new ArrayList<>();
         char[] ar = word.toCharArray();
         for(int i = 0; i < ar.length; i++){
@@ -73,7 +67,7 @@ class Solution {
             for(char j = 'a'; j <= 'z'; j++){
                 ar[i] = j;
                 String cur = new String(ar);
-                if(wordSet.contains(cur)){
+                if(words.contains(cur)){
                     res.add(cur);
                 }
             }
@@ -83,6 +77,5 @@ class Solution {
         
         return res;
     }
-    
 }
 //https://leetcode.com/problems/word-ladder-ii/discuss/435354/Java-Solution-or-BFS-%2B-DFS
