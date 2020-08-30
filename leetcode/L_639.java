@@ -26,10 +26,10 @@ class Solution {
         long[] dp = new long[s.length() + 1]; // use long to prevent overflow
         dp[0] = 1;
         dp[1] = ways(s.charAt(0));
-        for (int i = 1; i < s.length(); i++) { // off-by-one error, notice s.charAt(i)'s result is stored in dp[i + 1]
-            long oneCharWays = ways(s.charAt(i)) * dp[i];
-            long twoCharWays = ways(s.charAt(i - 1), s.charAt(i)) * dp[i - 1];
-            dp[i + 1] = add(oneCharWays, twoCharWays);
+        for (int i = 2; i < dp.length; i++) { // off-by-one error, notice s.charAt(i)'s result is stored in dp[i + 1]
+            long oneCharWays = ways(s.charAt(i-1)) * dp[i-1];
+            long twoCharWays = ways(s.charAt(i - 2), s.charAt(i-1)) * dp[i - 2];
+            dp[i] = add(oneCharWays, twoCharWays);
         }
         return (int)dp[s.length()]; // cast back
     }
