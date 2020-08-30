@@ -1,5 +1,5 @@
 class Solution {
-    private static final int M = 1000000007;
+    private static final long M = (long) 1e9 + 7;
     // function of addition with mod
     private long add(long num1, long num2) {
         return (num1 % M + num2 % M) % M;
@@ -34,5 +34,3 @@ class Solution {
         return (int)dp[s.length()]; // cast back
     }
 }
-
-//https://leetcode.com/problems/decode-ways-ii/discuss/139593/Java-**Clear-and-Readable**-Code-with-comment!-Let's-separate-DP-and-decode-functions!
