@@ -1,41 +1,39 @@
 class Solution {
-    
-    long n = 0;
-    long ans = 0;
-    long diff = Long.MAX_VALUE;
-    
     public String nearestPalindromic(String n) {
-        this.n = Long.parseLong(n);
-        diff = Long.MAX_VALUE;
+        long num = Long.valueOf(n);
+        int len = n.length();
+        int i = len % 2 == 0 ? len /2 - 1 : len/2;
         
-        long leftHalf = Long.parseLong(n.substring(0, (n.length() + 1)/2));
-
-        concat(leftHalf - 1);
-        concat((leftHalf - 1)*10 + 9);
-        concat(leftHalf);
-        concat(leftHalf + 1);
-        concat((leftHalf + 1)/10);
-        return ans + "";
-    }
-    
-    public void concat(long leftHalf){
-        String s = "" + leftHalf, rs = new StringBuilder(s).reverse().toString();
-        update(s + rs); // abc - abccba
-        update(s + rs.substring(1)); //abc - abcba
-    }
-    
-    public void update(String val){
-        try{
-            long tmp = Long.parseLong(val);
-            if(tmp == n) return;
-            if(Math.abs(tmp - n) < diff || Math.abs(tmp - n) == diff && tmp < ans){
-                ans = tmp;
-                diff = Math.abs(tmp - n);
+        String str = n.substring(0, i + 1);
+        long l = Long.valueOf(str);
+        List<Long> list = new ArrayList<>();
+        
+        list.add(help(l, len % 2 == 0));
+        list.add(help(l-1, len % 2 == 0));
+        list.add(help(l+1, len % 2 == 0));
+        list.add((long) Math.pow(10, len - 1) - 1);
+        list.add((long) Math.pow(10, len) + 1);
+        long pot = 0, diff = Integer.MAX_VALUE;
+        for(Long ln : list){
+            if(ln == num) continue;
+            if(Math.abs(num - ln) < diff){
+                diff = Math.abs(num - ln);
+                pot = ln;
+            }else if(Math.abs(num - ln) == diff){
+                pot = Math.min(pot, ln);
             }
         }
-        catch(Exception e){}
+        
+        return String.valueOf(pot);
     }
-    
+    public long help(long l, boolean even){
+        long res = l;
+        if(!even) l /= 10;
+        while(l > 0){
+            res = res*10 + l % 10; ; l /= 10;
+        }
+        return res;
+    }
 }
 
-//https://leetcode.com/problems/find-the-closest-palindrome/discuss/102400/Concise-Java-Solution
+//https://leetcode.com/problems/find-the-closest-palindrome/discuss/122957/Java-compare-five-candidates-get-result-easy-to-understand
