@@ -1,31 +1,43 @@
 class Solution {
-    int count = 0;
+    Map<Integer,Integer> map = new HashMap<>();
     public int numDecodings(String s) {
-
-
-        Set<String> set = new HashSet<>();
-        for(int i = 1; i <= 26; i++){
-
-            set.add(Integer.toString(i));
-        }
-        return wb2(s, set);
+        return dfs(0, s);
     }
-   
-    public int wb2(String s, Set<String> set){
-        int res = 0;
-        int[] dp = new int[s.length()+1];
-        dp[0] = 1;
-        if(set.contains(s.substring(0,1))){
-            dp[1] = 1;
+    public int dfs(int i, String s){
+        if(i == s.length()) return 1;
+        if(s.charAt(i) == '0') return 0;
+        if(map.containsKey(i)) return map.get(i);
+        int one = dfs(i+1, s);
+        int two = 0;
+        if(i + 1 < s.length()){
+            int val = Integer.parseInt(s.substring(i, i + 2));
+            if(10 <= val && val <= 26){
+                two = dfs(i + 2, s);
+            }
         }
-        for(int i = 2; i <= s.length(); i++){
-             for(int j = 1; j <= 2; j++){
-                 if(set.contains(s.substring(i-j, i)) && dp[i-j] > 0 ) {
-                     dp[i] += dp[i-j];
-                 }
-             }
-        }
-        return dp[s.length()];
+        map.put(i, one + two);
+        return one + two;
+    }
+}
 
+class Solution {
+    public int numDecodings(String s) {
+        if(s.isEmpty() || s.length() == 0) return 0;
+        int n = s.length();
+        
+        int[] dp = new int[n+1];
+        dp[0]  = 1;
+        dp[1] = s.charAt(0) == '0' ? 0 : 1;
+        for(int i = 2; i < dp.length; i++){
+            if(s.charAt(i-1) != '0'){
+                dp[i] += dp[i-1];
+            }
+            
+            int two = Integer.parseInt(s.substring(i-2, i));
+            if(two >= 10 && two <= 26){
+                dp[i] += dp[i-2];
+            }
+        }
+        return dp[n];
     }
 }
