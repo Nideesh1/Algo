@@ -1,33 +1,27 @@
-class Solution {
+public class Solution {
     public String longestPalindrome(String s) {
-        int n = s.length();
-        String res = "";
-        if(n == 1) return s;
-        boolean[][] dp = new boolean[n][n];
-        for(int i = 0; i < n; i++){
-            dp[i][i] = true;
-            res = s.substring(i,i+1);
+        if(s == null || s.length() == 0) {
+            return "";
         }
-        int max = 1;
-
-        for(int len = 2; len <= n; len++){
-            for(int i = 0; i + len <= n; i++){
-                    int j = i + len - 1;
-                
-                
-                    if(len <= 3){
-                        if(s.charAt(i) == s.charAt(j)) dp[i][j] = true;
-                    }else{
-                        if(s.charAt(i) == s.charAt(j) && dp[i+1][j-1]) dp[i][j] = true;
-                    }
-                
-                    if(dp[i][j] && max < j - i + 1){
-                        max = j - i + 1; res = s.substring(i,j+1);
-                    }
+        int len = s.length();
+        boolean[][] dp = new boolean[len][len];
+        int start = 0;
+        int end = 0;
+        int max = 0;
+        for(int i = 0; i < s.length(); i++) {
+            for(int j = 0; j <= i; j++) {
+                if(s.charAt(i) == s.charAt(j) && (i - j <= 2 || dp[j+1][i-1])) {
+                    dp[j][i] = true;
+                }
+                if(dp[j][i] && max < i - j + 1) {
+                    max = i - j + 1;
+                    start = j;
+                    end = i;
+                }
             }
         }
-        return res;
+        return s.substring(start, end + 1);
     }
 }
 
-//https://leetcode.com/problems/longest-palindromic-substring/
+//https://leetcode.com/problems/longest-palindromic-substring/discuss/2987/Clean-Java-solution-using-DP-yet-the-time-complexity-is-O(N2)
