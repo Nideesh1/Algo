@@ -1,87 +1,105 @@
-class Node<K,V>{
-    K key; V val; Node left; Node right;
-    Node(K key, V val){
-        this.key = key; this.val = val;
+public class LRUCache {
+
+  class DLinkedNode {
+    int key;
+    int value;
+    DLinkedNode prev;
+    DLinkedNode next;
+  }
+
+  private void addNode(DLinkedNode node) {
+    /**
+     * Always add the new node right after head.
+     */
+    node.prev = head;
+    node.next = head.next;
+
+    head.next.prev = node;
+    head.next = node;
+  }
+
+  private void removeNode(DLinkedNode node){
+    /**
+     * Remove an existing node from the linked list.
+     */
+    DLinkedNode prev = node.prev;
+    DLinkedNode next = node.next;
+
+    prev.next = next;
+    next.prev = prev;
+  }
+
+  private void moveToHead(DLinkedNode node){
+    /**
+     * Move certain node in between to the head.
+     */
+    removeNode(node);
+    addNode(node);
+  }
+
+  private DLinkedNode popTail() {
+    /**
+     * Pop the current tail.
+     */
+    DLinkedNode res = tail.prev;
+    removeNode(res);
+    return res;
+  }
+
+  private Map<Integer, DLinkedNode> cache = new HashMap<>();
+  private int size;
+  private int capacity;
+  private DLinkedNode head, tail;
+
+  public LRUCache(int capacity) {
+    this.size = 0;
+    this.capacity = capacity;
+
+    head = new DLinkedNode();
+    // head.prev = null;
+
+    tail = new DLinkedNode();
+    // tail.next = null;
+
+    head.next = tail;
+    tail.prev = head;
+  }
+
+  public int get(int key) {
+    DLinkedNode node = cache.get(key);
+    if (node == null) return -1;
+
+    // move the accessed node to the head;
+    moveToHead(node);
+
+    return node.value;
+  }
+
+  public void put(int key, int value) {
+    DLinkedNode node = cache.get(key);
+
+    if(node == null) {
+      DLinkedNode newNode = new DLinkedNode();
+      newNode.key = key;
+      newNode.value = value;
+
+      cache.put(key, newNode);
+      addNode(newNode);
+
+      ++size;
+
+      if(size > capacity) {
+        // pop the tail
+        DLinkedNode tail = popTail();
+        cache.remove(tail.key);
+        --size;
+      }
+    } else {
+      // update the value.
+      node.value = value;
+      moveToHead(node);
     }
+  }
 }
 
-class LRUCache {
-    Map<Integer,Node> map; int cap; Node start; Node end;
-    public LRUCache(int capacity) {
-        this.map = new HashMap<>();
-        this.cap = capacity; 
-    }
-    
-    public int get(int key) {
-        if(map.containsKey(key)){
-            Node n = map.get(key);
-            removeNode(n); addToTop(n);
-            return (Integer) n.val;
-        }
-        return -1;
-    }
-    
-    public void put(int key, int value) {
-        if(!map.containsKey(key)){
-            Node n = new Node(key, value);
-            n.left = null; n.right = null;
-            //check size
-            if(map.size() < cap){
-                addToTop(n);
-            }else{
-                map.remove(end.key);
-                removeNode(end);
-                addToTop(n);
-            }
-            map.put(key, n);
-        }else{
-            Node g = map.get(key);
-            g.val = value;
-            removeNode(g);
-            addToTop(g);
-        }
-    }
-    
-    //helper1
-    //make the new node the start
-    public void addToTop(Node node){
-        node.right = start;
-        node.left = null;
-        if(start != null){
-            start.left = node;
-        }
-        start = node;
-        if(end == null){
-            end = start;
-        }
-    } 
-        
-        
-    //helper2
-    public void removeNode(Node node){
-        //left side
-        if(node.left == null){
-            start = node.right;
-        }else{
-            node.left.right = node.right;
-        }
-        
-        //right side
-        if(node.right == null){
-            end = node.left;
-        }else{
-            node.right.left = node.left;
-        }
-    }
-}
-
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache obj = new LRUCache(capacity);
- * int param_1 = obj.get(key);
- * obj.put(key,value);
- */
- 
- //https://leetcode.com/problems/lru-cache/
- //https://medium.com/@krishankantsinghal/my-first-blog-on-medium-583159139237
+//https://leetcode.com/problems/lru-cache/solution/
