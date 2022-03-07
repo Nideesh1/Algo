@@ -41,6 +41,17 @@ class Solution {
     }
 }
 
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) return head;
+        
+        ListNode temp = head.next;
+        head.next = swapPairs(head.next.next);
+        temp.next = head;
+        return temp;
+    }
+}
+
 //https://leetcode.com/problems/swap-nodes-in-pairs/discuss/11030/My-accepted-java-code.-used-recursion.
 //https://leetcode.com/problems/swap-nodes-in-pairs/discuss/11046/My-simple-JAVA-solution-for-share
 
