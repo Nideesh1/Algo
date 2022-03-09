@@ -10,8 +10,10 @@ class Solution {
             
             while (repeats > 0) {
                 char left = s.charAt(l);
-                if (map.get(left) > 1) repeats--;
                 map.put(left, map.get(left) - 1);
+                if (map.get(left) == 1) {
+                    repeats--;
+                }                
                 l++;
             }
             res = Math.max(res, r -l);
