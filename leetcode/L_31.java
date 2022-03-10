@@ -1,36 +1,43 @@
-class Solution {
-    int n = 0;
-    public void nextPermutation(int[] nums) {
-        n = nums.length;
-        
-        int i = n - 2;
-        while(i >= 0 && nums[i] >= nums[i+1]){
-            i--;
-        }
-        if(i >= 0){
-            int j = n-1;
-            while(j >= 0 && nums[i] >= nums[j]){
-                j--;
-            }
-            
-            swap(nums, i, j);
-        }
-        reverse(nums, i+1);
+public void nextPermutation(int[] num) {
+    int n=num.length;
+    if(n<2)
+        return;
+    int index=n-1;        
+    while(index>0){
+        if(num[index-1]<num[index])
+            break;
+        index--;
     }
-    public void reverse(int[] nums, int start){
-        int lo = start; int hi = n-1;
-        while(lo <= hi){
-            swap(nums, lo, hi); lo++; hi--;
-        }
+    if(index==0){
+        reverseSort(num,0,n-1);
+        return;
     }
-    
-    
-    public void swap(int[] ar, int i, int j){
-        int t = ar[i];
-        ar[i] = ar[j];
-        ar[j] = t;
+    else{
+        int val=num[index-1];
+        int j=n-1;
+        while(j>=index){
+            if(num[j]>val)
+                break;
+            j--;
+        }
+        swap(num,j,index-1);
+        reverseSort(num,index,n-1);
+        return;
     }
 }
 
-//https://leetcode.com/problems/next-permutation/solution/
-//https://leetcode.com/problems/next-permutation/
+public void swap(int[] num, int i, int j){
+    int temp=0;
+    temp=num[i];
+    num[i]=num[j];
+    num[j]=temp;
+}
+
+public void reverseSort(int[] num, int start, int end){   
+    if(start>end)
+        return;
+    for(int i=start;i<=(end+start)/2;i++)
+        swap(num,i,start+end-i);
+}
+
+//https://leetcode.com/problems/next-permutation/discuss/13866/Share-my-O(n)-time-solution
