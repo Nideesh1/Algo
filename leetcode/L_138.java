@@ -1,20 +1,34 @@
 class Solution {
-    Map<Node,Node> map = new HashMap<>();
-    
     public Node copyRandomList(Node head) {
-        if(head == null) return null;
+        if (head == null) return null;
+        Node cur = head;
         
-        if(map.containsKey(head)){
-            return map.get(head);
+        //add new nodes
+        while (cur != null) {
+            Node add = new Node(cur.val);
+            add.next = cur.next;
+            cur.next = add;
+            cur = add.next;
         }
         
-        Node n = new Node(head.val, null, null);
+        cur = head;
         
-        map.put(head, n);
-        n.next = copyRandomList(head.next);
-        n.random = copyRandomList(head.random);
+        //put the random pointers, dont let random points to the old list
+        while (cur != null) {
+            cur.next.random = cur.random != null ? cur.random.next : null;
+            cur = cur.next.next;
+        }
         
-        return n;
+        //unweaev
+        Node old = head, copy = head.next, head_old = head.next;
+        while (old != null) {
+            old.next = old.next != null ? old.next.next : null;
+            copy.next = copy.next != null ? copy.next.next : null;
+            
+            old = old.next;
+            copy = copy.next;
+        }
+        return head_old;
     }
 }
 
