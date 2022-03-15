@@ -1,40 +1,31 @@
 class Solution {
     public String decodeString(String s) {
-        String res = "";
-        Stack<Integer> countStack = new Stack<>();
-        Stack<String> resStack = new Stack<>();
-        int idx = 0;
-        while(idx < s.length()){
-            if(Character.isDigit(s.charAt(idx))){
-                int count = 0;
-                while(Character.isDigit(s.charAt(idx))){
-
-                    while(Character.isDigit(s.charAt(idx))){
-                        count = 10 * count + (s.charAt(idx) - '0');
-                        idx++;
-                    }
-                    countStack.push(count);
+        Stack<Integer> countStk = new Stack<>();
+        Stack<StringBuilder> strStk = new Stack<>();
+        StringBuilder sb = new StringBuilder();
+        int k = 0;
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                k = k * 10 + (c - '0');
+            } else if (c == '[') {
+                countStk.push(k);
+                strStk.push(sb);
+                
+                k = 0;
+                sb = new StringBuilder();
+            } else if (c == ']') {
+                StringBuilder decode = strStk.pop();
+                for (int i = countStk.pop(); i > 0; i--) {
+                    decode.append(sb);
                 }
-            }
-            else if(s.charAt(idx) == '['){
-                resStack.push(res);
-                res = "";
-                idx++;
-            }
-            else if(s.charAt(idx) == ']'){
-                StringBuilder temp = new StringBuilder(resStack.pop());
-                int repeatTimes = countStack.pop();
-                for(int i = 0; i < repeatTimes; i++){
-                    temp.append(res);
-                }
-                res = temp.toString();
-                idx++;
-            }else{
-                res += s.charAt(idx++);
+                sb = decode;
+            } else {
+                sb.append(c);
             }
         }
-        return res;
+        
+        return sb.toString();
     }
 }
 
-//https://leetcode.com/problems/decode-string/discuss/87534/Simple-Java-Solution-using-Stack
+//https://leetcode.com/problems/decode-string/solution/
