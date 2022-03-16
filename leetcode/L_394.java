@@ -1,31 +1,26 @@
 class Solution {
     public String decodeString(String s) {
-        Stack<Integer> countStk = new Stack<>();
+        Stack<Integer> intStk = new Stack<>();
         Stack<StringBuilder> strStk = new Stack<>();
-        StringBuilder sb = new StringBuilder();
         int k = 0;
+        StringBuilder sb = new StringBuilder();
         for (char c : s.toCharArray()) {
             if (Character.isDigit(c)) {
                 k = k * 10 + (c - '0');
             } else if (c == '[') {
-                countStk.push(k);
-                strStk.push(sb);
-                
-                k = 0;
-                sb = new StringBuilder();
+                intStk.push(k); k = 0;
+                strStk.push(sb); sb = new StringBuilder();
             } else if (c == ']') {
-                StringBuilder decode = strStk.pop();
-                for (int i = countStk.pop(); i > 0; i--) {
-                    decode.append(sb);
+                int num = intStk.pop();
+                StringBuilder temp = strStk.pop();
+                for (int i = num; i > 0; i--) {
+                    temp.append(sb);
                 }
-                sb = decode;
+                sb = temp;
             } else {
                 sb.append(c);
             }
         }
-        
         return sb.toString();
     }
 }
-
-//https://leetcode.com/problems/decode-string/solution/
