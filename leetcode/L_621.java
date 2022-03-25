@@ -1,26 +1,19 @@
 class Solution {
     public int leastInterval(char[] tasks, int n) {
-        int[] map = new int[26];
-        for(char t : tasks){
-            map[t - 'A']++;
+        int[] freq = new int[26];
+        for (char t : tasks) freq[t - 'A']++;
+        
+        Arrays.sort(freq);
+        
+        int maxTaskFreq = freq[25];
+        int idleTime = (maxTaskFreq - 1) * n;
+        
+        for (int i = freq.length - 2; i >= 0 && idleTime > 0; i--) {
+            idleTime -= Math.min(freq[i] , maxTaskFreq - 1);
         }
-        Arrays.sort(map);
-        int res = 0;
-        while(map[25] > 0){
-            int i = 0;
-            
-            for(int j = 25; i <= n ; j--)
-            {
-                if(map[25] == 0 )break;
-                
-                if(j >= 0 && map[j] > 0 ){map[j]--;}
-                i++;
-                res++;
-            }
-
-            Arrays.sort(map);
-        }
-        return res;
+        idleTime = Math.max(0, idleTime);
+        
+        return idleTime + tasks.length;
     }
 }
 //https://leetcode.com/problems/task-scheduler/
