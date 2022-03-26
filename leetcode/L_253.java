@@ -1,32 +1,17 @@
 class Solution {
     public int minMeetingRooms(int[][] intervals) {
-        if(intervals.length == 0)return 0;
-        int res = 0;
-        Comparator<int[]> co = new Comparator<int[]>(){
-            public int compare(int[] a, int[] b){
-                return a[0] - b[0];
-            }
-        };
-        Comparator<int[]> co1 = new Comparator<int[]>(){
-            public int compare(int[] a , int[] b){
-                return a[1] - b[1];
-            }
-        };
-        Arrays.sort(intervals, co);
-        PriorityQueue<int[]> pq = new PriorityQueue<int[]>(co1);
-        
-        pq.add(intervals[0]);
-        for(int i = 1; i < intervals.length; i++){
-            int[] t = pq.poll();
-            if(t[1] <= intervals[i][0]){
-                t[1] = intervals[i][1];
-            }else{
-                pq.add(intervals[i]);
-            }
-            pq.add(t);
+        TreeMap<Integer,Integer> map = new TreeMap<>();
+        for (int[] inter : intervals) {
+            map.put(inter[0], map.getOrDefault(inter[0], 0 ) + 1);
+            map.put(inter[1], map.getOrDefault(inter[1], 0 ) - 1);
         }
-        return pq.size();
+        int room = 0, res = 0;
+        for (int val : map.values()) {
+            room += val;
+            res = Math.max(res, room);
+        }
+        return res;
     }
 }
 
-//https://leetcode.com/problems/meeting-rooms-ii/
+//https://leetcode.com/problems/meeting-rooms-ii/discuss/203658/HashMapTreeMap-resolves-Scheduling-Problem
