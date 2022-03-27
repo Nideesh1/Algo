@@ -1,3 +1,5 @@
+//dp[i][j] means whether the specific sum j can be gotten from the first i numbers
+
 class Solution {
     public boolean canPartition(int[] nums) {
         int sum = 0;
