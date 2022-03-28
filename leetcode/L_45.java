@@ -41,5 +41,29 @@ class Solution {
     }
 }
 
+
+class Solution {
+    int[] dp;
+    public int jump(int[] nums) {
+        dp = new int[nums.length];
+        Arrays.fill(dp, -1);
+        return dfs (nums, 0);
+    }
+    public int dfs(int[] nums, int p) {
+        if (p >= nums.length - 1) return 0;
+        if (dp[p] != -1) return dp[p];
+        //System.out.println(p);
+        int min = Integer.MAX_VALUE;
+        for (int i = p; i < nums[p] + p; i++) {
+            int res = dfs(nums, 1 + i);
+            if (res != Integer.MAX_VALUE) {
+                min = Math.min(min, 1 + res);
+            }
+        }
+        dp[p] = min == Integer.MAX_VALUE ? -1 : min;
+        return min;
+    }
+}
+
 //https://leetcode.com/problems/jump-game-ii/discuss/18028/O(n)-BFS-solution
 //https://leetcode.com/problems/jump-game-ii/discuss/18028/O(n)-BFS-solution/228614
