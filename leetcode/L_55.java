@@ -69,3 +69,24 @@ class Solution {
 }
 
 //https://leetcode.com/problems/jump-game/solution/
+
+
+class Solution {
+    int[] dp;
+    public boolean canJump(int[] nums) {
+        dp = new int[nums.length];
+        Arrays.fill(dp,-1);
+        return dfs(nums, 0);
+    }
+    public boolean dfs(int[] nums, int pos) {
+        if (pos == nums.length - 1) return true;
+        if (dp[pos] != -1) return dp[pos] == 0 ? false : true;
+        int furthest = Math.min(pos + nums[pos], nums.length - 1);
+        for (int next = furthest; next > pos; next --) {
+            boolean res = dfs(nums, next);
+            dp[next] = res == false ? 0 : 1;
+            if (res) return true;
+        }
+        return false;
+    }
+}
