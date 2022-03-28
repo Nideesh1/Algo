@@ -3,6 +3,8 @@ class Solution {
         int left = 0, right = A.length - k;
         while (left < right) {
             int mid = (left + right) / 2;
+            // x is larger than A[mid], so let's try getting closer to x which will be on the right side of mid
+            // then if the difference is larger than k closest differnce till x. then optimize left window
             if (x - A[mid] > A[mid + k] - x)
                 left = mid + 1;
             else
