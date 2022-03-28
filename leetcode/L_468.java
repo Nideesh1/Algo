@@ -1,60 +1,85 @@
 class Solution {
-    public String validIPAddress(String IP) {
-        if(ip4(IP)){
-            return "IPv4";
+    private boolean isIPv4(String IP) {
+        int cnt = 0;
+        for (char ch : IP.toCharArray()) {
+            if (ch == '.') {
+                cnt++;
+            }
         }
-        if(ip6(IP)){
-            return "IPv6";
-        }
-        return "Neither";
-    }
-    
-    public boolean ip4(String tok){
-        if(tok.length() < 7)return false;
-        if(tok.charAt(0) == '.' || tok.charAt(tok.length() - 1) == '.') return false;
-        String[] toks = tok.split("\\.");
-        if(toks.length != 4)return false;
-        for(String t : toks){
-            if(!ip4tok(t)) return false;
-        }
-        return true;
-    }
-    public boolean ip4tok(String tok){
-        
-        if(tok.startsWith("0") && tok.length() > 1) return false;
-        try{
-            int pint = Integer.parseInt(tok);
-            if(pint < 0 || pint > 255) return false;
-            if(pint == 0 && tok.charAt(0) != '0') return false;
-        }catch(NumberFormatException nfe){
+
+        if (cnt != 3) {
             return false;
         }
-        
+
+        String[] fields = IP.split("\\.");
+        if (fields.length != 4) {
+            return false;
+        }
+
+        for (String field : fields) {
+            if (field.isEmpty() || field.length() > 3) {
+                return false;
+            }
+
+            int sz = field.length();
+            for (int i = 0; i < sz; ++i) {
+                if (!Character.isDigit(field.charAt(i))) {
+                    return false;
+                }
+            }
+
+            int num = Integer.valueOf(field);
+            if (!String.valueOf(num).equals(field) || num < 0 || num > 255) {
+                return false;
+            }
+        }
+
         return true;
     }
-    
-    public boolean ip6(String tok){
-        if(tok.length() < 15)return false;
-        if(tok.charAt(0) == ':' || tok.charAt(tok.length() - 1) == ':') return false;
-        String[] toks = tok.split(":");
-        if(toks.length != 8)return false;  
-        for(String t : toks){
-            if(!ip6tok(t)) return false;
+
+    private boolean isIPv6(String IP) {
+        int cnt = 0;
+        for (char ch : IP.toCharArray()) {
+            if (ch == ':') {
+                cnt++;
+            }
         }
-        return true;               
-    }
-    public boolean ip6tok(String tok){
-        if(tok.length() > 4 || tok.length() == 0) return false;
-        char[] ch = tok.toCharArray();
-        for(char c : ch){
-            boolean dig = c >= 48 && c <= 57;
-            boolean up = c >= 65 && c <= 70;
-            boolean low = c >= 97 && c <= 102;
-            if(!(dig || up || low))return false;
+
+        if (cnt != 7) {
+            return false;
         }
-            
+
+        String[] fields = IP.split(":");
+        if (fields.length != 8) {
+            return false;
+        }
+
+        for (String field : fields) {
+            if (field.isEmpty() || field.length() > 4) {
+                return false;
+            }
+
+            int sz = field.length();
+            for (int i = 0; i < sz; ++i) {
+                if (!Character.isDigit(field.charAt(i)) && (field.charAt(i) < 'A' || field.charAt(i) > 'F')) {
+                    return false;
+                }
+            }
+        }
+
         return true;
+    }
+
+    public String validIPAddress(String IP) {
+        if (isIPv4(IP)) {
+            return "IPv4";
+        }
+
+        if (isIPv6(IP.toUpperCase())) {
+            return "IPv6";
+        }
+
+        return "Neither";
     }
 }
 
-//https://leetcode.com/problems/validate-ip-address/discuss/95491/Java-Simple-Solution
