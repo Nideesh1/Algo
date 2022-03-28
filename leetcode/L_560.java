@@ -26,7 +26,7 @@ class Solution {
         int cumSum = 0;
         for(int i : nums){
             cumSum += i;
-            
+            // if the cumSum - k (the complement exists, the we know yes, we have a combo)
             if(map.containsKey(cumSum - k)){
                 res += map.get(cumSum - k);
             }
