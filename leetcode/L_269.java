@@ -1,57 +1,50 @@
 class Solution {
-    Map<Character,List<Character>> map = new HashMap<>();
-    Map<Character,Integer> ind = new HashMap<>();
-    Set<Character> let = new HashSet<>();
     public String alienOrder(String[] words) {
+        Map<Character,List<Character>> map = new HashMap<>();
+        int[] indegree = new int[26];
+        
+        Set<Character> seen = new HashSet<>();
+        for(String word : words) {
+            for (char c : word.toCharArray()) {
+                seen.add(c);
+            }
+        }
+        //System.out.println(seen);
+        for (int i = 0; i < words.length - 1; i++) {
+            String cur = words[i];
+            String next = words[i+1];
+            //System.out.println(map);
+            // find the first letter abc , adeh which is different and use the shorter length
+            int minLen = Math.min(cur.length(), next.length());
+            for (int j = 0; j < minLen; j++ ) {
+                if (cur.charAt(j) != next.charAt(j)) {
+                    List<Character> list = map.getOrDefault(cur.charAt(j), new ArrayList<>());
+                    list.add(next.charAt(j));
+                    map.put(cur.charAt(j), list);
+                    indegree[next.charAt(j) - 'a']++;
+                    break;
+                }
+                // abcd , abc should return false
+                if (j == minLen - 1 && next.length() < cur.length()) return "";
+            }
+        }
+        //System.out.println(map);
+        
+        StringBuilder sb = new StringBuilder();
         Queue<Character> q = new LinkedList<>();
-        for(int i = 0; i < words.length; i++){
-            let(words[i]);
-        }  
-        //build map
-        for(int i = 1; i < words.length; i++){
-            build(words[i-1], words[i]);
-        }
-        //build ind
-        for(char c : let){
-            if(!ind.containsKey(c)){
-                q.add(c);
+        for (Character c : seen) if (indegree[c-'a'] == 0) q.add(c);
+        //System.out.println(q);
+        while(!q.isEmpty()) {
+            Character cur = q.poll();
+            sb.append(cur);
+            if(!map.containsKey(cur)) continue;
+            for (Character nei : map.get(cur)) {
+                indegree[nei - 'a']--;
+                if (indegree[nei - 'a'] == 0) {
+                    q.add(nei);
+                }
             }
         }
-
-        String res = "";
-        while(!q.isEmpty()){
-            char c = q.poll();
-            
-            if(!ind.containsKey(c) || (ind.containsKey(c) && ind.get(c) == 0)){
-                res += c;
-            }
-            for(char nei : map.getOrDefault(c, new ArrayList<>())){
-                ind.put(nei, ind.get(nei) - 1);
-                if(ind.get(nei) == 0){q.add(nei);}
-            }
-            
-        }
-        return res.length() == let.size() ? res : "";
-    }
-    
-    public void let(String s){
-        for(char c : s.toCharArray()) let.add(c);
-    }
-    
-    public void build(String one, String two){
-        for(int i = 0;  i < Math.min(one.length(), two.length()); i++){
-            char o = one.charAt(i);
-            char t = two.charAt(i);  
-            if(o == t)continue;
-            
-            List<Character> l = map.getOrDefault(o, new ArrayList<>());
-            l.add(t); 
-            ind.put(t, ind.getOrDefault(t,0)+1);
-            //ind.put(o, ind.getOrDefault(t,0)+0);            
-            map.put(o, l);
-            break;
-        }
+        return sb.length() == seen.size() ? sb.toString() : "";
     }
 }
-
-//https://leetcode.com/problems/alien-dictionary/
