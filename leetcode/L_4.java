@@ -12,6 +12,8 @@ public class Solution {
         return (getKth(nums1, 0, nums2, 0, l) + getKth(nums1, 0, nums2, 0, r)) / 2.0;
     }
     
+    
+    // k is the number of integers in that array
     private double getKth(int[] nums1, int start1, int[] nums2, int start2, int k) {
         // This function finds the Kth element in nums1 + nums2
         
