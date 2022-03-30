@@ -41,3 +41,5 @@ class Solution {
 }
 
 //https://leetcode.com/problems/median-of-two-sorted-arrays/discuss/2496/Concise-JAVA-solution-based-on-Binary-Search
+// if (aMid < bMid) Keep [aRight + bLeft]    
+// else Keep [bRight + aLeft]
