@@ -8,19 +8,23 @@
 
 class Solution {
     public int countShips(Sea sea, int[] topRight, int[] bottomLeft) {
-        if(!sea.hasShips(topRight, bottomLeft)) return 0;
-        if(topRight[0] == bottomLeft[0] && topRight[1] == bottomLeft[1]) return 1;
+        return dfs(sea, topRight, bottomLeft);
+    }
+    public int dfs(Sea sea, int[] topRight, int[] bottomLeft) {
+        int x1 = bottomLeft[0], y1 = bottomLeft[1], x2 = topRight[0], y2 = topRight[1];
+        if (x1 > x2 || y1 > y2) return 0;
+        if (!sea.hasShips(topRight, bottomLeft)) return 0;
+        if (x1 == x2 && y1 == y2) return 1;
+
         
-        int mx = (topRight[0] + bottomLeft[0])/2;
-        int my = (topRight[1] + bottomLeft[1])/2;
+        int mx = (x1 + x2) / 2;
+        int my = (y1 + y2) / 2;
+
+        int botL = dfs(sea, new int[]{mx,my}, bottomLeft);
+        int topR = dfs(sea, topRight, new int[]{mx + 1,my + 1});
         
-        int upl = countShips(sea, new int[]{mx, topRight[1]}, new int[]{bottomLeft[0], my + 1});
-        int upr = countShips(sea, topRight, new int[]{mx + 1, my + 1});
-        int dwl = countShips(sea, new int[] {mx, my}, bottomLeft);        
-        int dwr = countShips(sea, new int[]{topRight[0], my}, new int[]{mx + 1, bottomLeft[1]});
-        
-        return upl + upr + dwl + dwr;
+        int topL = dfs(sea, new int[]{mx, y2}, new int[]{x1, my + 1});
+        int botR = dfs(sea, new int[]{x2,my}, new int[]{mx + 1,y1});
+        return topL + topR + botL + botR;
     }
 }
-
-//https://leetcode.com/problems/number-of-ships-in-a-rectangle/discuss/440768/Java-Simple-divide-and-conquer-solution-with-explanation
