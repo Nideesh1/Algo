@@ -1,5 +1,7 @@
 //costs[i][j] is the total travel distance from houses[i..j] when putting mailbox in median of houses[i..j]
 
+//costs[i][j] is the total travel distance from houses[i..j] when putting mailbox in median of houses[i..j]
+
 class Solution {
     int MAX = 100, INF = 100 * 10000;
     int[][] costs = new int[MAX][MAX];
@@ -8,7 +10,7 @@ class Solution {
         int n = houses.length;
         Arrays.sort(houses);
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+            for (int j = i; j < n; j++) {
                 int mid = houses[(i + j) / 2];
                 for (int m = i; m <= j; m++) {
                     costs[i][j] += Math.abs(mid - houses[m]);
