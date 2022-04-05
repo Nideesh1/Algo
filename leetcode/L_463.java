@@ -39,3 +39,39 @@ class Solution {
     
 }
 //https://leetcode.com/problems/island-perimeter/
+
+
+class Solution {
+    public int islandPerimeter(int[][] grid) {
+        int res = 0;
+        
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == 1) {
+                    //System.out.println("fd");
+                    for (int k = 0; k < 4; k++) {
+                        int ro = i + x[k];
+                        int co = j + y[k];
+                        //System.out.println(ro + "," + co);
+                        //System.out.println(ro + "," + co);
+                        if (outside(grid, ro, co) || grid[ro][co] == 0) {
+                            
+                            res += 1;
+                        }
+                    }
+                    
+                }
+            }
+        }
+        
+        return res;
+    }
+    
+    int[] x = {0,0,-1,1};
+    int[] y = {-1,1,0,0};
+    
+    public boolean outside(int[][] grid, int i, int j) {
+        if (i < 0 || j < 0 || i >= grid.length || j >= grid[0].length ) return true;
+        return false;
+    }
+}
