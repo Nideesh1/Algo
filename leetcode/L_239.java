@@ -1,39 +1,38 @@
 class Solution {
+    ArrayDeque<Integer> dq = new ArrayDeque<>();
+    int[] nums;
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
-        if(n * k == 0) return new int[0];
-        if(k == 1) return nums;
-        
-        
-        int[] left = new int[n];
-        int[] right = new int[n];
-        
-        left[0] = nums[0];
-        right[n-1] = nums[n-1];
-        
-        for(int i = 1; i < nums.length; i++){
-            
-            if(i % k == 0) left[i] = nums[i];
-            else{
-                left[i] = Math.max(left[i-1], nums[i]);
-            }
-            
-            int j = n - 1 - i;
-            if((j+1) % k == 0) right[j] = nums[j];
-            else{
-                right[j] = Math.max(nums[j], right[j+1]);
-            }
-        
+        if (n * k == 0) return new int[0];
+        if (n == 1) return nums;
+        int[] res = new int[n - k + 1];
+        int max_idx = 0;
+        this.nums = nums;
+        for (int i = 0; i < k; i++) {
+            clear(i,k);
+            dq.addLast(i);
+            //check the max indx
+            if (nums[i] > nums[max_idx]) max_idx = i;
         }
-        
-        int[] out = new int[n - k + 1];
-        for(int i = 0; i < out.length; i++){
-            out[i] = Math.max(right[i], left[i + k - 1]);
+        //System.out.println(dq);
+        res[0] = nums[max_idx];
+        for (int i = k; i < n; i++) {
+            clear(i, k);
+            dq.addLast(i);
+            // the peekFirst will have the largest, since the largestwas pushed out first
+            res[i - k + 1] = nums[dq.peekFirst()];
         }
-
-        return out;        
-        
+        return res;
+    }
+    
+    //remove left side if i is out of the window index
+    //the biggest one coming in on the right, pushes out everything smaller
+    public void clear (int i, int k) {
+        while (!dq.isEmpty() && dq.peekFirst() == i - k) {
+            dq.pollFirst();
+        }
+        while (!dq.isEmpty() && nums[i] > nums[dq.peekLast()]) {
+            dq.pollLast();
+        }
     }
 }
-
-//https://leetcode.com/problems/sliding-window-maximum/solution/
