@@ -5,8 +5,8 @@ class Solution {
         return res;
     }
     public void dfs(StringBuilder sb, List<String> arr, int p) {
-        if (p > arr.size()) return;
         res = Math.max(sb.length(), res);
+        if (p >= arr.size()) return;
         //System.out.println(sb);
         for (int i = p; i < arr.size(); i++) {
             if (duplicate(sb, arr.get(i))) continue;
