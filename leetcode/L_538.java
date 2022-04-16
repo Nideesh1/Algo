@@ -4,19 +4,27 @@
  *     int val;
  *     TreeNode left;
  *     TreeNode right;
- *     TreeNode(int x) { val = x; }
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
  * }
  */
 class Solution {
-    
-    int sum = 0;
+    int total = 0;
     public TreeNode convertBST(TreeNode root) {
-        if(root == null) return null;
-        convertBST(root.right);
-        sum += root.val;
-        root.val = sum;
-        convertBST(root.left);
+        dfs(root);
         return root;
     }
+    public void dfs(TreeNode root) {
+        if (root == null) return;
+        dfs(root.right);
+        total += root.val;
+        //System.out.println(root.val + " total is " + total);
+        root.val = total;
+        dfs(root.left);
+    }
 }
-
