@@ -1,51 +1,44 @@
 class Leaderboard {
-    // playerId to score
-    Map<Integer,Integer> map;
-    // score and how many times it occurred
-    TreeMap<Integer,Integer> scoreCount;
+    //key is playerId, val is current score
+    Map<Integer,Integer> pMap;
+    
+    //key is score, val is frequency
+    TreeMap<Integer,Integer> sMap;
     public Leaderboard() {
-        map = new HashMap<>();
-        scoreCount = new TreeMap<>(Collections.reverseOrder());
+        pMap = new HashMap<>();
+        sMap = new TreeMap<>(Collections.reverseOrder());
     }
     
     public void addScore(int playerId, int score) {
-        if (!map.containsKey(playerId)) {
-            map.put(playerId, score);
-            scoreCount.put(score, scoreCount.getOrDefault(score, 0) + 1);
-        } else {
-            int previousScore = map.get(playerId);
-            scoreCount.put(previousScore, scoreCount.get(previousScore) - 1);
-            if (scoreCount.get(previousScore) == 0) {
-                scoreCount.remove(previousScore);
-            }
-            int newScore = score + previousScore;
-            map.put(playerId, newScore);
-            scoreCount.put(newScore, scoreCount.getOrDefault(newScore, 0) + 1);
+        if (!pMap.containsKey(playerId)) {
+            pMap.put(playerId, score);
+            sMap.put(score, sMap.getOrDefault(score, 0 ) + 1);
+            return;
         }
+        
+        int prevScore = pMap.get(playerId);
+        sMap.put(prevScore, sMap.get(prevScore) - 1);
+        
+        int nextScore = prevScore + score;
+        pMap.put(playerId, nextScore);
+        sMap.put(nextScore, sMap.getOrDefault(nextScore, 0) + 1);
     }
     
     public int top(int K) {
-        int count = 0, sum = 0;
-        for (int key : scoreCount.keySet()) {
-            int times = scoreCount.get(key);
-            for (int i = 0; i < times; i++) {
-                sum += key;
-                count++;
-                if (count == K) break;
+        int res = 0;
+        for (int key : sMap.keySet()) {
+            int count = sMap.get(key);
+            while (K != 0 && count != 0) {
+                res += key;
+                K--; count--;
             }
-            if (count == K) break;
         }
-        return sum;
+        return res;
     }
     
     public void reset(int playerId) {
-        int score = map.get(playerId);
-        map.remove(playerId);
-        scoreCount.put(score, scoreCount.get(score) - 1);
-        if (scoreCount.get(score) == 0) {
-            scoreCount.remove(score);
-        }
+        int prevScore = pMap.get(playerId);
+        sMap.put(prevScore, sMap.get(prevScore) - 1);
+        pMap.remove(playerId);
     }
 }
-
-//https://leetcode.com/problems/design-a-leaderboard/discuss/418833/Java-TreeMap-%2B-Map-Solution
