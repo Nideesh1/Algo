@@ -1,21 +1,27 @@
 class FirstUnique {
-    Queue<Integer> q = new LinkedList<>();
-    Map<Integer,Boolean> unique = new HashMap<>();
+    //key is num, val is true if unique
+    Map<Integer,Boolean> map;
+    Queue<Integer> q;
     public FirstUnique(int[] nums) {
-        for (int n : nums) add(n);
+        q = new LinkedList<>();
+        map = new HashMap<>();
+        for (int n : nums) {
+            q.add(n);
+            if (!map.containsKey(n)) {map.put(n, true);}
+            else {map.put(n, false);}
+        }
     }
     
     public int showFirstUnique() {
-        while (!q.isEmpty() && !unique.get(q.peek())) q.poll();
-        
-        if (!q.isEmpty()) return q.peek();
-        return -1;
+        while (!q.isEmpty() && map.get(q.peek()) == false) {
+            q.poll();
+        }
+        return q.peek() == null ? -1 : q.peek();
     }
     
     public void add(int value) {
-        if(!unique.containsKey(value)) {
-            unique.put(value, true);
-            q.add(value);
-        } else {unique.put(value, false);}
+        q.add(value);
+        if (!map.containsKey(value)) {map.put(value, true);}
+        else {map.put(value, false);}
     }
 }
