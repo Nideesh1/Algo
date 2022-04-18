@@ -96,11 +96,98 @@ class LFUCache<K,V> {
         countMap.put(node.cnt, newList);
     }
 }
-/**
- * Your LFUCache object will be instantiated and called as such:
- * LFUCache obj = new LFUCache(capacity);
- * int param_1 = obj.get(key);
- * obj.put(key,value);
- */
- 
+
  //https://leetcode.com/problems/lfu-cache/
+
+
+
+class LFUCache {
+
+    class Node {
+        Node next; Node prev;
+        int count = 1; int key; int val;
+        Node (int key, int val) {
+            this.key = key; this.val = val;
+        }
+    }
+    
+    class DLL {
+        Node head, tail; int size = 0;
+        DLL () {
+            head = new Node(0,0);
+            tail = new Node(0,0);
+            head.next = tail;
+            tail.prev = head;
+        }
+        
+        void addToHead(Node node) {
+            head.next.prev = node;
+            node.next = head.next;
+            
+            head.next = node;
+            node.prev = head;
+            size++;
+        }
+        
+        void remove(Node node) {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+            size--;
+        }
+        
+        Node removeLast() {
+            if (size <= 0) return null;
+            Node last = tail.prev;
+            remove(last);
+            return last;
+        }
+    }
+    int capacity, size = 0, min = 0;
+    Map<Integer,Node> nodeMap;
+    Map<Integer,DLL> countMap;
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        nodeMap = new HashMap<>();
+        countMap = new HashMap<>();
+    }
+    
+    public int get(int key) {
+        Node node = nodeMap.get(key);
+        if (node == null) return -1;
+        update(node);
+        return node.val;
+    }
+    
+    public void put(int key, int value) {
+        if (capacity == 0) return;
+        Node node;
+        if (nodeMap.containsKey(key)) {
+            node = nodeMap.get(key);
+            node.val = value;
+            update (node);
+        } else {
+            node = new Node(key, value);
+            nodeMap.put(key, node);
+            if (size == capacity) {
+                DLL lastList = countMap.get(min);
+                nodeMap.remove(lastList.removeLast().key);
+                size--;
+            }
+            size++;
+            min = 1;
+            DLL newList = countMap.getOrDefault(min, new DLL());
+            newList.addToHead(node);
+            countMap.put(min, newList);
+        }
+    }
+    
+    private void update (Node node) {
+        DLL oldList = countMap.get(node.count);
+        oldList.remove(node);
+        if (node.count == min && oldList.size == 0) min++;
+        node.count++;
+        DLL newList = countMap.getOrDefault(node.count, new DLL());
+        newList.addToHead(node);
+        countMap.put(node.count, newList);
+    }
+}
